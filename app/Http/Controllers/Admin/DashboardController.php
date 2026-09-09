@@ -4,9 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\ContactMessage;
-use App\Models\Post;
 use App\Models\Project;
-use App\Models\Service;
 use Illuminate\View\View;
 
 class DashboardController extends Controller
@@ -14,14 +12,16 @@ class DashboardController extends Controller
     public function __invoke(): View
     {
         $stats = [
-            'Services' => Service::query()->count(),
-            'Projects' => Project::query()->count(),
-            'Articles' => Post::query()->count(),
-            'Unread messages' => ContactMessage::query()->where('is_read', false)->count(),
+            'پروژه‌های فعال' => Project::query()->where('is_active', true)->where('status', '!=', 'تکمیل شده')->count(),
+            'برج‌های تکمیل شده' => Project::query()->where('status', 'تکمیل شده')->count(),
+            'پروژه‌های ویلا' => Project::query()->where('category', 'like', '%ویلا%')->count(),
+            'درخواست‌های جدید' => ContactMessage::query()->where('is_read', false)->count(),
+            'کل سرنخ‌ها' => ContactMessage::query()->count(),
         ];
 
         $messages = ContactMessage::query()->latest()->limit(6)->get();
+        $recentProjects = Project::query()->latest()->limit(4)->get();
 
-        return view('admin.dashboard', compact('stats', 'messages'));
+        return view('admin.dashboard', compact('stats', 'messages', 'recentProjects'));
     }
 }

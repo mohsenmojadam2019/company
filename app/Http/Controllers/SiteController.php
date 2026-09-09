@@ -21,7 +21,6 @@ class SiteController extends Controller
             'testimonials' => Testimonial::query()->where('is_active', true)->orderBy('sort_order')->limit(6)->get(),
             'posts' => Post::query()->where('is_active', true)->whereNotNull('published_at')->where('published_at', '<=', now())->latest('published_at')->limit(3)->get(),
         ]);
-
         return view('site.home', $data);
     }
 
@@ -46,29 +45,20 @@ class SiteController extends Controller
     public function projects(Request $request): View
     {
         $query = Project::query()->where('is_active', true);
-
         if ($search = trim((string) $request->query('q'))) {
-            $query->where(fn ($builder) => $builder
-                ->where('title', 'like', "%{$search}%")
-                ->orWhere('location', 'like', "%{$search}%")
-                ->orWhere('category', 'like', "%{$search}%"));
+            $query->where(fn ($builder) => $builder->where('title', 'like', "%{$search}%")->orWhere('location', 'like', "%{$search}%")->orWhere('category', 'like', "%{$search}%"));
         }
-
-        if ($category = trim((string) $request->query('category'))) {
-            $query->where('category', $category);
-        }
-
+        if ($category = trim((string) $request->query('category'))) $query->where('category', $category);
         $projects = $query->orderBy('sort_order')->latest()->paginate(12)->withQueryString();
         $categories = Project::query()->where('is_active', true)->whereNotNull('category')->distinct()->orderBy('category')->pluck('category');
         $featured = Project::query()->where('is_active', true)->where('is_featured', true)->orderBy('sort_order')->first();
-
         return view('site.projects.index', compact('projects', 'categories', 'featured'));
     }
 
     public function project(Project $project): View
     {
         abort_unless($project->is_active, 404);
-        $related = Project::query()->where('is_active', true)->whereKeyNot($project->getKey())->orderBy('sort_order')->limit(3)->get();
+        $related = Project::query()->where('is_active', true)->where($project->getKeyName(), '!=', $project->getKey())->orderBy('sort_order')->limit(3)->get();
         return view('site.projects.show', compact('project', 'related'));
     }
 

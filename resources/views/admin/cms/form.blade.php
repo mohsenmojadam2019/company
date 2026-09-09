@@ -1,25 +1,6 @@
 @extends('layouts.admin')
-@section('title',($item->exists ? 'Edit ' : 'New ').$config['singular'])
-@section('page_heading',($item->exists ? 'Edit ' : 'New ').$config['singular'])
+@section('title',($item->exists?'ویرایش ':'افزودن ').$config['singular'])
 @section('content')
-<form method="POST" enctype="multipart/form-data" action="{{ $item->exists ? route('admin.cms.update',[$resource,$item->id]) : route('admin.cms.store',$resource) }}">@csrf @if($item->exists)@method('PUT')@endif
-<div class="admin-form-grid"><section class="admin-card form-card"><div class="admin-card-head"><div><h3>{{ $item->exists ? 'Edit content' : 'Create content' }}</h3><p>Fields marked by the browser as required must be completed.</p></div></div><div class="admin-form">
-@foreach($config['fields'] as $name => $field)
-    @php($value = old($name, $item->{$name}))
-    @if($field['type'] === 'checkbox')
-        <label class="check-field panel-check"><input type="checkbox" name="{{ $name }}" value="1" @checked(old($name, $item->{$name}))><span><strong>{{ $field['label'] }}</strong><small>Enable this option</small></span></label>
-    @elseif($field['type'] === 'textarea')
-        <label>{{ $field['label'] }}<textarea name="{{ $name }}" rows="{{ in_array($name,['body','quote','bio']) ? 10 : 4 }}">{{ $value }}</textarea>@error($name)<small class="field-error">{{ $message }}</small>@enderror</label>
-    @elseif($field['type'] === 'image')
-        <label>{{ $field['label'] }}@if($item->{$name})<span class="current-file"><img src="{{ asset('storage/'.$item->{$name}) }}" alt="" width="90" height="70">Current image</span>@endif<input type="file" name="{{ $name }}" accept="image/jpeg,image/png,image/webp,image/avif">@error($name)<small class="field-error">{{ $message }}</small>@enderror</label>
-    @else
-        @php
-            $inputValue = $value;
-            if ($field['type'] === 'date' && $item->{$name} instanceof \Carbon\CarbonInterface) $inputValue = $item->{$name}->format('Y-m-d');
-            if ($field['type'] === 'datetime-local' && $item->{$name} instanceof \Carbon\CarbonInterface) $inputValue = $item->{$name}->format('Y-m-d\TH:i');
-        @endphp
-        <label>{{ $field['label'] }}<input type="{{ $field['type'] }}" name="{{ $name }}" value="{{ $inputValue }}">@error($name)<small class="field-error">{{ $message }}</small>@enderror</label>
-    @endif
-@endforeach
-</div></section><aside class="admin-card form-actions-card"><span class="admin-kicker">Publishing</span><h3>{{ $item->exists ? 'Save your changes' : 'Ready to create?' }}</h3><p>Content becomes available to the public site according to its Active/Publish options.</p><button class="admin-btn full-btn" type="submit">{{ $item->exists ? 'Save changes' : 'Create '.$config['singular'] }}</button><a class="secondary-btn full-btn" href="{{ route('admin.cms.index',$resource) }}">Cancel</a></aside></div></form>
+<div class="admin-intro"><div><h2>{{ $item->exists ? 'ویرایش '.$config['singular'] : 'افزودن '.$config['singular'] }}</h2><p>اطلاعات را دقیق وارد کنید؛ عنوان و توضیحات روی SEO و نمایش سایت اثر دارند.</p></div></div>
+<form method="POST" enctype="multipart/form-data" action="{{ $item->exists ? route('admin.cms.update',[$resource,$item->id]) : route('admin.cms.store',$resource) }}">@csrf @if($item->exists)@method('PUT')@endif<div class="admin-form-grid"><section class="admin-card"><div class="admin-form">@foreach($config['fields'] as $name=>$field)@php($value=old($name,$item->{$name}))@if($field['type']==='checkbox')<label class="panel-check"><input type="checkbox" name="{{ $name }}" value="1" @checked(old($name,$item->{$name}))><span><strong>{{ $field['label'] }}</strong></span></label>@elseif($field['type']==='textarea')<label>{{ $field['label'] }}<textarea name="{{ $name }}" rows="{{ in_array($name,['body','quote','bio']) ? 10 : 4 }}">{{ $value }}</textarea>@error($name)<small class="field-error">{{ $message }}</small>@enderror</label>@elseif($field['type']==='image')<label>{{ $field['label'] }}@if($item->{$name})<span class="current-file"><img src="{{ \App\Support\Media::url($item->{$name}) }}" alt="" width="90" height="70">تصویر فعلی</span>@endif<input type="file" name="{{ $name }}" accept="image/jpeg,image/png,image/webp,image/avif">@error($name)<small class="field-error">{{ $message }}</small>@enderror</label>@else @php($inputValue=$value) @if($field['type']==='date'&&$item->{$name} instanceof \Carbon\CarbonInterface)@php($inputValue=$item->{$name}->format('Y-m-d'))@endif @if($field['type']==='datetime-local'&&$item->{$name} instanceof \Carbon\CarbonInterface)@php($inputValue=$item->{$name}->format('Y-m-d\TH:i'))@endif <label>{{ $field['label'] }}<input type="{{ $field['type'] }}" name="{{ $name }}" value="{{ $inputValue }}">@error($name)<small class="field-error">{{ $message }}</small>@enderror</label>@endif @endforeach</div></section><aside class="admin-card form-actions-card"><span class="gold-kicker">انتشار</span><h3>{{ $item->exists ? 'ذخیره تغییرات' : 'ثبت محتوای جدید' }}</h3><p>قبل از ذخیره، عنوان، توضیحات، وضعیت انتشار و اطلاعات SEO را بررسی کنید.</p><button class="admin-btn full-btn" type="submit">{{ $item->exists ? 'ذخیره تغییرات' : 'ایجاد '.$config['singular'] }}</button><a class="secondary-btn full-btn" href="{{ route('admin.cms.index',$resource) }}">انصراف</a></aside></div></form>
 @endsection

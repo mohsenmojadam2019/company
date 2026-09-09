@@ -1,63 +1,16 @@
 @extends('layouts.site')
-
 @section('content')
-<section class="hero section-pad">
-    <div class="container hero-grid">
-        <div class="hero-copy reveal">
-            <span class="eyebrow">Independent company · Strategy / Design / Technology</span>
-            <h1>{{ $siteSettings['hero_title'] ?? 'We build companies people remember.' }}</h1>
-            <p class="hero-lead">{{ $siteSettings['hero_text'] ?? 'A flexible corporate platform for presenting services, capabilities, work and ideas with clarity.' }}</p>
-            <div class="hero-actions"><a class="btn btn-dark" href="{{ route('contact') }}">Discuss a project <span>↗</span></a><a class="text-link" href="{{ route('projects.index') }}">View selected work <span>→</span></a></div>
-        </div>
-        <div class="hero-visual reveal" aria-hidden="true">
-            <div class="hero-orbit orbit-one"></div><div class="hero-orbit orbit-two"></div><div class="hero-disc"><span>Clarity</span><strong>01</strong></div>
-            <div class="hero-note note-a"><span>Strategy</span><b>Direction</b></div><div class="hero-note note-b"><span>Delivery</span><b>Systems</b></div>
-        </div>
+<section class="home-hero" data-parallax-scene>
+    <div class="lux-container home-hero-grid">
+        <div class="home-hero-copy reveal"><span class="gold-kicker">آریا سازه · ساخت آینده‌ای لوکس</span><h1>{{ $siteSettings['hero_title'] ?? 'ساخت برج‌های لوکس و خانه‌های رویایی' }}</h1><p>{{ $siteSettings['hero_text'] ?? 'ترکیبی از معماری معاصر، کیفیت ماندگار و دیدی متفاوت به آینده.' }}</p><div class="hero-actions"><a class="gold-btn" href="{{ route('projects.index') }}">مشاهده پروژه‌ها ←</a><a class="outline-btn" href="{{ route('contact') }}">شروع همکاری</a></div><a class="video-link" href="{{ route('about') }}"><span class="play-icon">▶</span><span>داستان آریا سازه</span></a></div>
+        <div class="home-hero-art" aria-hidden="true"><img class="hero-tower" data-parallax data-depth="20" src="{{ asset('assets/construction/hero-tower.svg') }}" alt="" width="1600" height="900" fetchpriority="high"><div class="hero-villa-frame" data-parallax data-depth="12"><img src="{{ asset('assets/construction/hero-villa.svg') }}" alt="" width="1600" height="900"></div><div class="floating-card float-top" data-parallax data-depth="30"><span>▥</span><div><strong>زندگی در ارتفاع</strong><small>برج‌های مسکونی لوکس</small></div></div><div class="floating-card float-bottom" data-parallax data-depth="24"><span>⌂</span><div><strong>خانه‌هایی برای نسل آینده</strong><small>ویلاهای مدرن و اختصاصی</small></div></div></div>
     </div>
-    <div class="container metrics-row">
-        <div><strong>12+</strong><span>Years combined experience</span></div><div><strong>42</strong><span>Projects shipped</span></div><div><strong>9</strong><span>Markets supported</span></div><div><strong>94%</strong><span>Repeat & referral work</span></div>
-    </div>
+    <div class="lux-container hero-statbar reveal"><div><strong>کیفیت</strong><small>تعهد همیشگی ما</small></div><div><strong>+۱۵</strong><small>سال تجربه</small></div><div><strong>+۷۰</strong><small>پروژه تکمیل شده</small></div><div><strong>+۲۵۰</strong><small>مشتری راضی</small></div><blockquote>«ما فقط ساختمان نمی‌سازیم؛ سبک زندگی می‌سازیم.»</blockquote></div>
 </section>
-
-<section class="section-pad soft-section">
-    <div class="container">
-        <div class="section-heading"><div><span class="eyebrow">What we do</span><h2>One partner from direction to delivery.</h2></div><p>Modular services for companies that need sharper positioning, better digital products and dependable execution.</p></div>
-        <div class="service-grid">
-            @forelse($services as $service)
-                <a class="service-card" href="{{ route('services.show', $service) }}"><span class="service-index">{{ $service->eyebrow ?: str_pad((string)$loop->iteration, 2, '0', STR_PAD_LEFT) }}</span><h3>{{ $service->title }}</h3><p>{{ $service->short_description }}</p><span class="circle-arrow">↗</span></a>
-            @empty
-                <div class="empty-state">Add services from the admin panel.</div>
-            @endforelse
-        </div>
-    </div>
-</section>
-
-<section class="section-pad">
-    <div class="container">
-        <div class="section-heading"><div><span class="eyebrow">Selected work</span><h2>Proof, not promises.</h2></div><a class="text-link" href="{{ route('projects.index') }}">All projects <span>→</span></a></div>
-        <div class="project-grid">
-            @foreach($projects as $project)
-                <a class="project-card" href="{{ route('projects.show', $project) }}">
-                    <div class="project-media">@if($project->image)<img src="{{ asset('storage/'.$project->image) }}" alt="{{ $project->title }}" loading="lazy" width="900" height="650">@else<span class="media-letter">{{ strtoupper(substr($project->title,0,1)) }}</span>@endif</div>
-                    <div class="project-meta"><div><span>{{ $project->category ?: 'Project' }}</span><h3>{{ $project->title }}</h3></div><span class="circle-arrow">↗</span></div>
-                </a>
-            @endforeach
-        </div>
-    </div>
-</section>
-
-<section class="section-pad dark-section">
-    <div class="container process-grid">
-        <div class="process-intro"><span class="eyebrow eyebrow-light">How we work</span><h2>Senior thinking. Small teams. Clear accountability.</h2><p>Every engagement is structured around decisions, evidence and measurable outcomes—not layers of process.</p></div>
-        <div class="process-list"><div><span>01</span><div><h3>Understand</h3><p>Goals, users, constraints and commercial context.</p></div></div><div><span>02</span><div><h3>Define</h3><p>A focused roadmap with priorities and success measures.</p></div></div><div><span>03</span><div><h3>Build</h3><p>Fast, disciplined execution with visible progress.</p></div></div><div><span>04</span><div><h3>Improve</h3><p>Measure, learn and strengthen what performs.</p></div></div></div>
-    </div>
-</section>
-
-@if($testimonials->isNotEmpty())
-<section class="section-pad"><div class="container"><span class="eyebrow">Client perspective</span><div class="quote-grid">@foreach($testimonials->take(2) as $testimonial)<blockquote><div class="quote-mark">“</div><p>{{ $testimonial->quote }}</p><footer><strong>{{ $testimonial->name }}</strong><span>{{ $testimonial->company }}</span></footer></blockquote>@endforeach</div></div></section>
-@endif
-
-<section class="section-pad soft-section"><div class="container"><div class="section-heading"><div><span class="eyebrow">Insights</span><h2>Useful thinking for growing companies.</h2></div><a class="text-link" href="{{ route('blog.index') }}">Read all insights <span>→</span></a></div><div class="insight-grid">@foreach($posts as $post)<a class="insight-card" href="{{ route('blog.show',$post) }}"><span>{{ $post->published_at?->format('M d, Y') }}</span><h3>{{ $post->title }}</h3><p>{{ $post->excerpt }}</p><b>Read article →</b></a>@endforeach</div></div></section>
-
-<section class="cta-section"><div class="container cta-inner"><div><span class="eyebrow">Have a project in mind?</span><h2>Let’s make the next move useful.</h2></div><a class="btn btn-dark" href="{{ route('contact') }}">Start a conversation <span>↗</span></a></div></section>
+<section class="section"><div class="lux-container"><div class="section-head"><div><span class="gold-kicker">از ایده تا اجرا</span><h2>خدمات ما</h2><p>راه‌حل‌های جامع برای خلق پروژه‌های مسکونی ماندگار و ارزشمند.</p></div><a class="text-arrow" href="{{ route('services.index') }}">مشاهده همه خدمات ←</a></div><div class="lux-service-grid">@forelse($services->take(5) as $service)<a class="lux-service-card reveal" href="{{ route('services.show',$service) }}"><span class="service-symbol">{{ $service->icon === 'building' ? '▥' : ($service->icon === 'home' ? '⌂' : '◇') }}</span><h3>{{ $service->title }}</h3><p>{{ $service->short_description }}</p><span class="text-arrow">اطلاعات بیشتر ←</span></a>@empty<div class="empty-state">خدمات را از پنل مدیریت اضافه کنید.</div>@endforelse</div></div></section>
+<section class="section projects-section"><div class="lux-container"><div class="section-head"><div><span class="gold-kicker">ساخت امروز، ارزش فردا</span><h2>پروژه‌های شاخص</h2><p>منتخبی از برج‌ها، ویلاها و خانه‌هایی که با دقت طراحی و ساخته‌ایم.</p></div><a class="text-arrow" href="{{ route('projects.index') }}">مشاهده همه پروژه‌ها ←</a></div><div class="featured-grid">@foreach($projects->take(4) as $project)@php($image=\App\Support\Media::url($project->image,'assets/construction/project-villa-01.svg'))<a class="featured-card reveal" data-tilt href="{{ route('projects.show',$project) }}"><div class="featured-image"><img src="{{ $image }}" alt="{{ $project->title }}" width="1000" height="650" loading="lazy"><span class="project-status">{{ $project->status ?: 'در حال اجرا' }}</span></div><div class="featured-content"><div><small>{{ $project->location }}</small><h3>{{ $project->title }}</h3><span>{{ $project->category }}</span></div><b class="round-arrow">←</b></div></a>@endforeach</div></div></section>
+<section class="section process-section"><div class="lux-container process-lux-grid"><div class="process-visual reveal" data-parallax-scene><img data-parallax data-depth="12" src="{{ asset('assets/construction/hero-villa.svg') }}" alt="ویلای مدرن آریا سازه" width="1600" height="900" loading="lazy"></div><div class="process-copy reveal"><span class="gold-kicker">فرآیند همکاری</span><h2>از یک ایده تا خانه‌ای که سال‌ها ماندگار می‌ماند.</h2><p>هر پروژه یک مسیر شفاف، قابل کنترل و حرفه‌ای دارد؛ بدون ابهام در زمان، بودجه یا کیفیت.</p><div class="steps"><div><b>۰۱</b><span><strong>مشاوره و امکان‌سنجی</strong><small>بررسی زمین، نیازها، بودجه و اهداف پروژه</small></span></div><div><b>۰۲</b><span><strong>طراحی و برنامه‌ریزی</strong><small>معماری، جزئیات، زمان‌بندی و برآورد اجرایی</small></span></div><div><b>۰۳</b><span><strong>ساخت و کنترل کیفیت</strong><small>اجرای مرحله‌به‌مرحله با گزارش و نظارت مستمر</small></span></div><div><b>۰۴</b><span><strong>تحویل و پشتیبانی</strong><small>تحویل کامل، مستندات و خدمات پس از پروژه</small></span></div></div></div></div></section>
+@if($testimonials->isNotEmpty())<section class="section testimonial-section"><div class="lux-container"><div class="section-head"><div><span class="gold-kicker">اعتماد ساخته می‌شود</span><h2>نظر مشتریان</h2></div></div><div class="testimonial-grid">@foreach($testimonials->take(2) as $testimonial)<blockquote class="testimonial-card reveal"><span class="quote-mark">“</span><p>{{ $testimonial->quote }}</p><footer><div class="avatar-letter">{{ mb_substr($testimonial->name,0,1) }}</div><div><strong>{{ $testimonial->name }}</strong><span>{{ $testimonial->company }}</span><small>{{ str_repeat('★',$testimonial->rating ?: 5) }}</small></div></footer></blockquote>@endforeach</div></div></section>@endif
+<section class="section"><div class="lux-container"><div class="section-head"><div><span class="gold-kicker">دانش و تجربه</span><h2>آخرین مقالات</h2></div><a class="text-arrow" href="{{ route('blog.index') }}">مشاهده همه مقالات ←</a></div><div class="article-grid">@foreach($posts as $post)<a class="article-card reveal" href="{{ route('blog.show',$post) }}"><span>{{ $post->published_at?->format('Y/m/d') }}</span><h3>{{ $post->title }}</h3><p>{{ $post->excerpt }}</p><b>مطالعه مقاله ←</b></a>@endforeach</div></div></section>
+<section class="consult-cta"><div class="lux-container consult-inner" data-parallax-scene><img data-parallax data-depth="10" src="{{ asset('assets/construction/hero-residence.svg') }}" alt="" width="1500" height="520" loading="lazy"><div class="consult-overlay"><span class="gold-kicker">پروژه بعدی شما</span><h2>با ما آینده خود را بسازید.</h2><p>برای بررسی زمین، بودجه یا ایده پروژه با تیم آریا سازه گفتگو کنید.</p><a class="gold-btn" href="{{ route('contact') }}">درخواست مشاوره ←</a></div></div></section>
 @endsection

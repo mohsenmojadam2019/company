@@ -19,7 +19,9 @@ class SiteSmokeTest extends TestCase
             $response
                 ->assertSee('dir="rtl"', false)
                 ->assertSee('<meta name="description"', false)
-                ->assertSee('<link rel="canonical"', false);
+                ->assertSee('<link rel="canonical"', false)
+                ->assertSee('assets/css/app.css')
+                ->assertSee('assets/js/app.js');
         }
 
         $this->get('/')
@@ -32,6 +34,12 @@ class SiteSmokeTest extends TestCase
 
         $this->get('/robots.txt')->assertSuccessful()->assertSee('Disallow: /admin');
         $this->get('/sitemap.xml')->assertSuccessful();
+    }
+
+    public function test_static_frontend_assets_are_available(): void
+    {
+        $this->assertFileExists(public_path('assets/css/app.css'));
+        $this->assertFileExists(public_path('assets/js/app.js'));
     }
 
     public function test_contact_form_stores_an_enquiry(): void
@@ -89,6 +97,8 @@ class SiteSmokeTest extends TestCase
         $this->actingAs($user)
             ->get('/admin')
             ->assertSuccessful()
-            ->assertSee('داشبورد');
+            ->assertSee('داشبورد')
+            ->assertSee('assets/css/app.css')
+            ->assertSee('assets/js/app.js');
     }
 }

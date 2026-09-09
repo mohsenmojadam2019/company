@@ -45,7 +45,7 @@
         'address' => $siteSettings['address'] ?? null,
         'sameAs' => $socialLinks,
     ], JSON_UNESCAPED_SLASHES|JSON_UNESCAPED_UNICODE) !!}</script>
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
+    <link rel="stylesheet" href="{{ asset('assets/css/app.css') }}">
     @stack('head')
 </head>
 <body class="site-body">
@@ -112,6 +112,7 @@
     </div>
 </footer>
 
+<script src="{{ asset('assets/js/app.js') }}" defer></script>
 @stack('scripts')
 </body>
 </html>

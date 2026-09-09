@@ -10,9 +10,7 @@ class ContactController extends Controller
 {
     public function store(Request $request): RedirectResponse
     {
-        if ($request->filled('website')) {
-            return back()->with('success', 'Thanks. Your message has been received.');
-        }
+        if ($request->filled('website')) return back()->with('success', 'درخواست شما با موفقیت دریافت شد.');
 
         $data = $request->validate([
             'name' => ['required', 'string', 'max:120'],
@@ -24,7 +22,6 @@ class ContactController extends Controller
         ]);
 
         ContactMessage::query()->create($data);
-
-        return back()->with('success', 'Thanks. Your message has been received.');
+        return back()->with('success', 'درخواست شما با موفقیت دریافت شد. به‌زودی با شما تماس می‌گیریم.');
     }
 }

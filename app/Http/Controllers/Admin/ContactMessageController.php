@@ -24,6 +24,6 @@ class ContactMessageController extends Controller
     public function destroy(ContactMessage $message): RedirectResponse
     {
         $message->delete();
-        return redirect()->route('admin.messages.index')->with('success', 'Message deleted.');
+        return redirect()->route('admin.messages.index')->with('success', 'پیام حذف شد.');
     }
 }

@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Models\ContactMessage;
+use App\Models\Project;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -11,37 +12,34 @@ class SiteSmokeTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function test_public_pages_render(): void
+    public function test_public_pages_render_with_rtl_and_seo_metadata(): void
     {
-        foreach (['/', '/about', '/services', '/projects', '/insights', '/contact', '/robots.txt', '/sitemap.xml'] as $uri) {
-            $this->get($uri)->assertSuccessful();
+        foreach (['/', '/about', '/services', '/projects', '/insights', '/contact'] as $uri) {
+            $response = $this->get($uri)->assertSuccessful();
+            $response->assertSee('dir="rtl"', false)->assertSee('<meta name="description"', false)->assertSee('<link rel="canonical"', false);
         }
+
+        $this->get('/robots.txt')->assertSuccessful()->assertSee('Disallow: /admin');
+        $this->get('/sitemap.xml')->assertSuccessful();
     }
 
     public function test_contact_form_stores_an_enquiry(): void
     {
-        $this->post('/contact', [
-            'name' => 'Taylor Smith',
-            'email' => 'taylor@example.com',
-            'company' => 'Example Co',
-            'subject' => 'New project',
-            'message' => 'We need help with a new corporate website project.',
-        ])->assertSessionHasNoErrors();
+        $this->post('/contact', ['name'=>'علی رضایی','email'=>'ali@example.com','phone'=>'09120000000','company'=>'Example','subject'=>'ساخت ویلا','message'=>'برای ساخت یک ویلای لوکس نیاز به مشاوره دارم.'])->assertSessionHasNoErrors()->assertSessionHas('success');
+        $this->assertDatabaseHas(ContactMessage::class, ['email'=>'ali@example.com','subject'=>'ساخت ویلا']);
+    }
 
-        $this->assertDatabaseHas(ContactMessage::class, ['email' => 'taylor@example.com']);
+    public function test_projects_can_be_filtered_by_category(): void
+    {
+        Project::query()->create(['title'=>'ویلای تست','category'=>'ویلاهای لوکس','location'=>'لواسان','status'=>'در حال اجرا','is_active'=>true]);
+        Project::query()->create(['title'=>'برج تست','category'=>'برج‌های مسکونی','location'=>'تهران','status'=>'در حال اجرا','is_active'=>true]);
+        $this->get('/projects?category='.urlencode('ویلاهای لوکس'))->assertSuccessful()->assertSee('ویلای تست')->assertDontSee('برج تست');
     }
 
     public function test_admin_requires_an_admin_account(): void
     {
         $this->get('/admin')->assertRedirect('/admin/login');
-
-        $user = User::query()->create([
-            'name' => 'Admin',
-            'email' => 'admin@example.com',
-            'password' => 'secret-password',
-            'is_admin' => true,
-        ]);
-
-        $this->actingAs($user)->get('/admin')->assertSuccessful();
+        $user = User::query()->create(['name'=>'مدیر','email'=>'admin@example.com','password'=>'secret-password','is_admin'=>true]);
+        $this->actingAs($user)->get('/admin')->assertSuccessful()->assertSee('داشبورد');
     }
 }

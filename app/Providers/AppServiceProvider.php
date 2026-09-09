@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use App\Models\Setting;
 use Illuminate\Pagination\Paginator;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
@@ -23,7 +24,7 @@ class AppServiceProvider extends ServiceProvider
             $settings = [];
 
             if (Schema::hasTable('settings')) {
-                $settings = Setting::query()->pluck('value', 'key')->all();
+                $settings = Cache::remember('site.settings', now()->addHour(), fn () => Setting::query()->pluck('value', 'key')->all());
             }
 
             $view->with('siteSettings', $settings);

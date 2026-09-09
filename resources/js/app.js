@@ -1,5 +1,3 @@
-import './bootstrap';
-
 const toggle = document.querySelector('[data-menu-toggle]');
 const menu = document.querySelector('[data-menu]');
 

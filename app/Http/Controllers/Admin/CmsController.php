@@ -8,7 +8,6 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Str;
 use Illuminate\View\View;
 
 class CmsController extends Controller
@@ -118,10 +117,6 @@ class CmsController extends Controller
                     $data[$name] = $request->file($name)->store('cms', 'public');
                 }
             }
-        }
-
-        if (array_key_exists('slug', $config['fields']) && empty($data['slug']) && ! empty($data['title'])) {
-            $data['slug'] = Str::slug($data['title']) ?: Str::random(10);
         }
 
         return $data;

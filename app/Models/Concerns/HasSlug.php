@@ -14,7 +14,10 @@ trait HasSlug
                 $slug = $base;
                 $counter = 2;
 
-                while (static::query()->where('slug', $slug)->when($model->exists, fn ($query) => $query->whereKeyNot($model->getKey()))->exists()) {
+                while (static::query()
+                    ->where('slug', $slug)
+                    ->when($model->exists, fn ($query) => $query->where($model->getKeyName(), '!=', $model->getKey()))
+                    ->exists()) {
                     $slug = $base.'-'.$counter++;
                 }
 

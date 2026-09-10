@@ -38,8 +38,15 @@ class SiteSmokeTest extends TestCase
 
     public function test_static_frontend_assets_are_available(): void
     {
-        $this->assertFileExists(public_path('assets/css/app.css'));
+        $cssPath = public_path('assets/css/app.css');
+        $fontPath = public_path('assets/fonts/BYekan.woff2');
+
+        $this->assertFileExists($cssPath);
         $this->assertFileExists(public_path('assets/js/app.js'));
+        $this->assertFileExists($fontPath);
+        $this->assertGreaterThan(0, filesize($fontPath));
+        $this->assertStringContainsString('../fonts/BYekan.woff2', file_get_contents($cssPath));
+        $this->assertStringContainsString('font-family:"BYekan"', file_get_contents($cssPath));
     }
 
     public function test_contact_form_stores_an_enquiry(): void
